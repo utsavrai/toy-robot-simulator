@@ -1,5 +1,3 @@
-# test_toy_robot_simulator.py
-
 import unittest
 from robot import RobotSimulator, Direction
 
@@ -17,10 +15,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "MOVE",
             "REPORT"
         ]
-        for command in commands[:-1]:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
-        self.assertEqual(output, "0,1,NORTH")
+        outputs = []
+        for command in commands:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        self.assertEqual(outputs[-1], "0,1,NORTH")
 
     def test_example_b(self):
         """Test example b from the specification."""
@@ -29,10 +29,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "LEFT",
             "REPORT"
         ]
-        for command in commands[:-1]:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
-        self.assertEqual(output, "0,0,WEST")
+        outputs = []
+        for command in commands:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        self.assertEqual(outputs[-1], "0,0,WEST")
 
     def test_example_c(self):
         """Test example c from the specification."""
@@ -44,10 +46,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "MOVE",
             "REPORT"
         ]
-        for command in commands[:-1]:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
-        self.assertEqual(output, "3,3,NORTH")
+        outputs = []
+        for command in commands:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        self.assertEqual(outputs[-1], "3,3,NORTH")
 
     def test_ignore_commands_before_place(self):
         """Test that commands before the first PLACE are ignored."""
@@ -62,7 +66,7 @@ class TestToyRobotSimulator(unittest.TestCase):
         ]
         outputs = []
         for command in commands:
-            output = self.simulator.execute_command(command)
+            success, output = self.simulator.execute_command(command)
             if output is not None:
                 outputs.append(output)
         self.assertEqual(outputs[-1], "0,1,NORTH")
@@ -76,8 +80,9 @@ class TestToyRobotSimulator(unittest.TestCase):
             "PLACE 5,5,SOUTH",
             "PLACE 2,2,WEST"
         ]
+        outputs = []
         for command in commands:
-            self.simulator.execute_command(command)
+            success, output = self.simulator.execute_command(command)
         output = self.simulator.robot.report()
         self.assertEqual(output, "2,2,WEST")
 
@@ -100,7 +105,7 @@ class TestToyRobotSimulator(unittest.TestCase):
         expected_outputs = ["0,0,SOUTH", "0,0,WEST", "4,4,NORTH", "4,4,EAST"]
         outputs = []
         for command in commands:
-            output = self.simulator.execute_command(command)
+            success, output = self.simulator.execute_command(command)
             if command.strip().upper() == "REPORT" and output is not None:
                 outputs.append(output)
         self.assertEqual(outputs, expected_outputs)
@@ -117,9 +122,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "MOVE",
             "REPORT"
         ]
+        outputs = []
         for command in commands:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        output = outputs[-1]
         self.assertEqual(output, "3,3,NORTH")
 
     def test_invalid_commands(self):
@@ -131,10 +139,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "TURN",
             "REPORT"
         ]
-        for command in commands[:-1]:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
-        self.assertEqual(output, "0,1,NORTH")
+        outputs = []
+        for command in commands:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        self.assertEqual(outputs[-1], "0,1,NORTH")
 
     def test_case_insensitivity(self):
         """Test that the simulator handles commands regardless of case."""
@@ -143,10 +153,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "MoVe",
             "report"
         ]
-        for command in commands[:-1]:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
-        self.assertEqual(output, "0,1,NORTH")
+        outputs = []
+        for command in commands:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        self.assertEqual(outputs[-1], "0,1,NORTH")
 
     def test_no_initial_place(self):
         """Test that commands before the first valid PLACE are ignored."""
@@ -160,8 +172,8 @@ class TestToyRobotSimulator(unittest.TestCase):
         ]
         outputs = []
         for command in commands:
-            output = self.simulator.execute_command(command)
-            if command.strip().upper() == "REPORT" and output is not None:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
                 outputs.append(output)
         self.assertEqual(outputs[-1], "2,2,EAST")
 
@@ -183,8 +195,8 @@ class TestToyRobotSimulator(unittest.TestCase):
         expected_outputs = ["1,1,NORTH", "1,1,NORTH"]
         outputs = []
         for command in commands:
-            output = self.simulator.execute_command(command)
-            if command.strip().upper() == "REPORT" and output is not None:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
                 outputs.append(output)
         self.assertEqual(outputs, expected_outputs)
 
@@ -202,9 +214,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "MOVE",
             "REPORT"
         ]
+        outputs = []
         for command in commands:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        output = outputs[-1]
         self.assertEqual(output, "1,1,NORTH")
 
     def test_report_at_edge(self):
@@ -213,10 +228,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "PLACE 0,4,NORTH",
             "REPORT"
         ]
+        outputs = []
         for command in commands:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
-        self.assertEqual(output, "0,4,NORTH")
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        self.assertEqual(outputs[-1], "0,4,NORTH")
 
     def test_invalid_direction(self):
         """Test that invalid directions are not accepted."""
@@ -228,9 +245,10 @@ class TestToyRobotSimulator(unittest.TestCase):
         ]
         outputs = []
         for command in commands:
-            output = self.simulator.execute_command(command)
-            if command.strip().upper() == "REPORT" and output is not None:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
                 outputs.append(output)
+        # Only the second PLACE is valid
         self.assertEqual(outputs[-1], "0,0,SOUTH")
 
     def test_place_off_table(self):
@@ -243,9 +261,10 @@ class TestToyRobotSimulator(unittest.TestCase):
         ]
         outputs = []
         for command in commands:
-            output = self.simulator.execute_command(command)
+            success, output = self.simulator.execute_command(command)
             if output is not None:
                 outputs.append(output)
+        # Both PLACE commands are invalid, so outputs should be empty
         self.assertEqual(outputs, [])
 
     def test_movement_blocked_at_edge(self):
@@ -256,10 +275,12 @@ class TestToyRobotSimulator(unittest.TestCase):
             "MOVE",
             "REPORT"
         ]
+        outputs = []
         for command in commands:
-            self.simulator.execute_command(command)
-        output = self.simulator.robot.report()
-        self.assertEqual(output, "0,0,SOUTH")
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
+                outputs.append(output)
+        self.assertEqual(outputs[-1], "0,0,SOUTH")
 
     def test_combined_commands(self):
         """Test a complex sequence of commands."""
@@ -278,8 +299,8 @@ class TestToyRobotSimulator(unittest.TestCase):
         expected_outputs = ["4,3,NORTH", "4,4,EAST"]
         outputs = []
         for command in commands:
-            output = self.simulator.execute_command(command)
-            if command.strip().upper() == "REPORT" and output is not None:
+            success, output = self.simulator.execute_command(command)
+            if output is not None:
                 outputs.append(output)
         self.assertEqual(outputs, expected_outputs)
 
